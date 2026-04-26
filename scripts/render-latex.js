@@ -25,9 +25,27 @@ const TOKENS_YAML = path.join(REPO_ROOT, '00_DESIGN_SYSTEM', 'tokens.yaml');
 const BIB_PATH = path.join(REPO_ROOT, '05_CITATIONS', 'references.bib');
 
 function ensureTokensCompiled() {
-  if (!fs.existsSync(TOKENS_TEX)) {
-    console.log('render-latex: compiled tokens missing — running compile-tokens first...');
-    const result = spawnSync('node', [path.join(__dirname, 'compile-tokens.js')], {
+  const COMPILE_TOKENS_SCRIPT = path.join(__dirname, 'compile-tokens.js');
+
+  let needsRun = !fs.existsSync(TOKENS_TEX);
+  let reason = 'missing';
+
+  if (!needsRun) {
+    // Compiled exists — check whether tokens.yaml or compile-tokens.js is newer.
+    // Without this check, edits to tokens.yaml or compile-tokens.js silently no-op
+    // because the cached tokens.tex satisfies the existence test alone.
+    const compiledMtime = fs.statSync(TOKENS_TEX).mtimeMs;
+    const yamlMtime = fs.existsSync(TOKENS_YAML) ? fs.statSync(TOKENS_YAML).mtimeMs : 0;
+    const scriptMtime = fs.existsSync(COMPILE_TOKENS_SCRIPT) ? fs.statSync(COMPILE_TOKENS_SCRIPT).mtimeMs : 0;
+    if (yamlMtime > compiledMtime || scriptMtime > compiledMtime) {
+      needsRun = true;
+      reason = 'stale';
+    }
+  }
+
+  if (needsRun) {
+    console.log(`render-latex: compiled tokens ${reason} — running compile-tokens first...`);
+    const result = spawnSync('node', [COMPILE_TOKENS_SCRIPT], {
       cwd: REPO_ROOT,
       stdio: 'inherit',
     });
