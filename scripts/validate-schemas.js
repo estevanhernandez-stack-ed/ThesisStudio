@@ -102,21 +102,24 @@ function validateOne(file, schema, data) {
 }
 
 // 3. render manifests (PDF / LaTeX / markdown / HTML render outputs)
+//    + lay-translator manifests (08_OUTPUT/layman/*.manifest.json)
 //
-// Note: 08_OUTPUT/layman/*.manifest.json belongs to the lay-translator skill
-// and uses a different schema (skill_version, source_commit, references_bib_hash,
-// section_grouping, verbatim_phrases_preserved, translator_flags). Skip those
-// here until manifest.lay.schema.json lands. Tracked alongside the BlogStudio
-// importer work that consumes that schema.
+// Render manifests use manifest.schema.json. Lay-translator manifests use
+// lay-manifest.schema.json (different fields: skill_version, source_article,
+// references_bib_hash, section_grouping_map, verbatim_phrases_preserved,
+// translator_flags). The two schemas are validated separately in the same
+// pass, dispatched on path.
 {
-  const schema = loadSchema('manifest');
+  const renderSchema = loadSchema('manifest');
+  const laySchema = loadSchema('lay-manifest');
   const isLayManifest = (f) => /[\\/]08_OUTPUT[\\/]layman[\\/]/.test(f);
-  const manifests = walk(path.join(REPO_ROOT, '08_OUTPUT'), (f) => /\.manifest\.json$/.test(f) && !isLayManifest(f))
+  const manifests = walk(path.join(REPO_ROOT, '08_OUTPUT'), (f) => /\.manifest\.json$/.test(f))
     .concat(walk(path.join(REPO_ROOT, 'examples'), (f) => /\.manifest\.json$/.test(f)));
   for (const file of manifests) {
     try {
       const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-      validateOne(file, schema, data);
+      const targetSchema = isLayManifest(file) ? laySchema : renderSchema;
+      validateOne(file, targetSchema, data);
     } catch (e) {
       failures.push({ file: relativize(file), jsonPath: '/', message: `JSON parse error: ${e.message}` });
     }
