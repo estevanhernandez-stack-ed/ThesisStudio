@@ -47,7 +47,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-fonts-extra \
     biber \
     latexmk \
+    fontconfig \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
+
+# Design-system fonts not in apt's catalogue: JetBrains Mono (code), Source
+# Serif 4 (editorial body), Space Grotesk (editorial sans). The script
+# fetches them from upstream releases and installs to /usr/share/fonts/.
+# Without this layer, npm run render:pdf fails with "Package fontspec Error:
+# The font ... cannot be found" against any of the three.
+COPY install-fonts.sh /usr/local/bin/install-fonts.sh
+RUN chmod +x /usr/local/bin/install-fonts.sh && /usr/local/bin/install-fonts.sh
 
 # Python deps for render-helper scripts (currently none required, but reserved)
 # RUN pip3 install --no-cache-dir pyyaml
