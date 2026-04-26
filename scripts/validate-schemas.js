@@ -101,10 +101,17 @@ function validateOne(file, schema, data) {
   }
 }
 
-// 3. render manifests
+// 3. render manifests (PDF / LaTeX / markdown / HTML render outputs)
+//
+// Note: 08_OUTPUT/layman/*.manifest.json belongs to the lay-translator skill
+// and uses a different schema (skill_version, source_commit, references_bib_hash,
+// section_grouping, verbatim_phrases_preserved, translator_flags). Skip those
+// here until manifest.lay.schema.json lands. Tracked alongside the BlogStudio
+// importer work that consumes that schema.
 {
   const schema = loadSchema('manifest');
-  const manifests = walk(path.join(REPO_ROOT, '08_OUTPUT'), (f) => /\.manifest\.json$/.test(f))
+  const isLayManifest = (f) => /[\\/]08_OUTPUT[\\/]layman[\\/]/.test(f);
+  const manifests = walk(path.join(REPO_ROOT, '08_OUTPUT'), (f) => /\.manifest\.json$/.test(f) && !isLayManifest(f))
     .concat(walk(path.join(REPO_ROOT, 'examples'), (f) => /\.manifest\.json$/.test(f)));
   for (const file of manifests) {
     try {
