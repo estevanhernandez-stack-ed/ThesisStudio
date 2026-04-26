@@ -88,6 +88,51 @@ function buildCss(tokens) {
     lines.push(`  --color-code-bg: ${tokens.colors.code_background};`);
   }
   lines.push('}');
+
+  // Editorial layer — sits on top of base tokens. See 00_DESIGN_SYSTEM/editorial/editorial.css
+  // for the full component classes; these are the variables that feed both that file
+  // and any HTML render template.
+  if (tokens.editorial && tokens.editorial.enabled !== false) {
+    const ed = tokens.editorial;
+    lines.push('');
+    lines.push('/* Editorial layer (longform register) */');
+    lines.push(':root {');
+    if (ed.surface) {
+      if (ed.surface.paper)      lines.push(`  --ed-paper: ${ed.surface.paper};`);
+      if (ed.surface.paper_soft) lines.push(`  --ed-paper-soft: ${ed.surface.paper_soft};`);
+      if (ed.surface.paper_deep) lines.push(`  --ed-paper-deep: ${ed.surface.paper_deep};`);
+    }
+    if (ed.ink) {
+      if (ed.ink.primary)   lines.push(`  --ed-ink: ${ed.ink.primary};`);
+      if (ed.ink.secondary) lines.push(`  --ed-ink-2: ${ed.ink.secondary};`);
+      if (ed.ink.tertiary)  lines.push(`  --ed-ink-3: ${ed.ink.tertiary};`);
+      if (ed.ink.muted)     lines.push(`  --ed-ink-muted: ${ed.ink.muted};`);
+    }
+    if (ed.link) {
+      if (ed.link.default) lines.push(`  --ed-link: ${ed.link.default};`);
+      if (ed.link.hover)   lines.push(`  --ed-link-hover: ${ed.link.hover};`);
+    }
+    if (ed.typography) {
+      if (ed.typography.serif_body)        lines.push(`  --font-serif: "${ed.typography.serif_body}", "Iowan Old Style", "Georgia", serif;`);
+      if (ed.typography.measure)           lines.push(`  --ed-measure: ${ed.typography.measure};`);
+      if (ed.typography.page_max)          lines.push(`  --ed-page-max: ${ed.typography.page_max};`);
+      if (ed.typography.line_height_body)  lines.push(`  --ed-lh-body: ${ed.typography.line_height_body};`);
+      if (ed.typography.line_height_pull)  lines.push(`  --ed-lh-pull: ${ed.typography.line_height_pull};`);
+    }
+    if (ed.scale) {
+      const s = ed.scale;
+      if (s.h1)       lines.push(`  --ed-t-h1: ${s.h1};`);
+      if (s.h2)       lines.push(`  --ed-t-h2: ${s.h2};`);
+      if (s.h3)       lines.push(`  --ed-t-h3: ${s.h3};`);
+      if (s.dek)      lines.push(`  --ed-t-dek: ${s.dek};`);
+      if (s.body)     lines.push(`  --ed-t-body: ${s.body};`);
+      if (s.pull)     lines.push(`  --ed-t-pull: ${s.pull};`);
+      if (s.caption)  lines.push(`  --ed-t-caption: ${s.caption};`);
+      if (s.eyebrow)  lines.push(`  --ed-t-eyebrow: ${s.eyebrow};`);
+      if (s.footnote) lines.push(`  --ed-t-foot: ${s.footnote};`);
+    }
+    lines.push('}');
+  }
   return lines.join('\n') + '\n';
 }
 
