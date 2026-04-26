@@ -1,0 +1,44 @@
+# ThesisStudio Design Tokens
+# Canonical source. Compiled at build time into:
+#   compiled/tokens.tex   — LaTeX preamble (consumed by render-pdf, render-latex)
+#   compiled/tokens.css   — CSS custom properties (consumed by HTML preview)
+#   compiled/tokens.json  — Structured form (consumed by render scripts)
+#
+# Edit this file to customize your thesis's visual identity.
+# Run `npm run compile:tokens` to regenerate compiled forms.
+# The version field is semver — bump when changes affect downstream pinning.
+
+version: "1.0.0"
+
+typography:
+  body_font: "Source Serif Pro"
+  heading_font: "Source Sans Pro"
+  code_font: "JetBrains Mono"
+  base_size: "11pt"
+  line_height: 1.45
+
+colors:
+  text: "#1a1a1a"
+  background: "#ffffff"
+  accent: "#2c5282"
+  link: "#2b6cb0"
+  code_background: "#f7fafc"
+
+spacing:
+  paragraph_above: "0.5em"
+  section_above: "1.5em"
+  page_margin: "1in"
+
+code_blocks:
+  syntax_theme: "tango"
+  show_line_numbers: false
+
+brand:
+  logo_path: ""
+  cover_image_path: ""
+  watermark_path: ""
+
+citation:
+  style: "chicago-author-date"
+  csl_path: "05_CITATIONS/styles/chicago-author-date.csl"
+  bibliography_title: "References"
