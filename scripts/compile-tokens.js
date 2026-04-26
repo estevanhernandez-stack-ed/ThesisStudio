@@ -67,6 +67,78 @@ function buildLatexPreamble(tokens) {
   lines.push('% Hyperlink styling');
   lines.push('\\usepackage{hyperref}');
   lines.push('\\hypersetup{colorlinks=true,linkcolor=linkcolor,urlcolor=linkcolor,citecolor=accentcolor}');
+
+  // Editorial layer — sits on top of the base preamble. See the editorial
+  // group in tokens.yaml. Translates the design decisions from
+  // 00_DESIGN_SYSTEM/editorial/editorial.css into LaTeX equivalents:
+  // light paper surface, Source Serif body, Space Grotesk display headings,
+  // restrained accent colors, drop-cap / pull-quote / eyebrow / sidenote
+  // helpers ready for use in body markdown via raw-LaTeX or class spans.
+  if (tokens.editorial && tokens.editorial.enabled !== false) {
+    const ed = tokens.editorial;
+    lines.push('');
+    lines.push('% =====================================================');
+    lines.push('% Editorial layer (longform reading register)');
+    lines.push('% =====================================================');
+
+    // Page surface + ink override — applied AFTER base color setup so the
+    // editorial palette wins.
+    if (ed.surface && ed.surface.paper) {
+      lines.push(`\\definecolor{paper}{RGB}{${hexToRgb(ed.surface.paper)}}`);
+      lines.push('\\pagecolor{paper}');
+    }
+    if (ed.ink && ed.ink.primary) {
+      lines.push(`\\definecolor{ink}{RGB}{${hexToRgb(ed.ink.primary)}}`);
+      lines.push('\\color{ink}');
+    }
+
+    // Editorial link colors override the base hyperref setup.
+    if (ed.link && ed.link.default) {
+      lines.push(`\\definecolor{edlink}{RGB}{${hexToRgb(ed.link.default)}}`);
+      lines.push('\\hypersetup{linkcolor=edlink,urlcolor=edlink,citecolor=edlink}');
+    }
+    if (ed.link && ed.link.hover) {
+      lines.push(`\\definecolor{dropcap}{RGB}{${hexToRgb(ed.link.hover)}}`);
+    }
+
+    // Editorial main font — overrides body_font from the base layer.
+    if (ed.typography && ed.typography.serif_body) {
+      lines.push(`\\setmainfont{${ed.typography.serif_body}}[Ligatures=TeX,Numbers=OldStyle]`);
+    }
+    // Display font for headings — Space Grotesk is the 626 Labs brand display
+    // face; hardcoded here because the editorial layer IS the 626 Labs editorial
+    // register. Override via tokens.yaml typography.heading_font on the base
+    // layer if you fork outside the brand.
+    lines.push('\\setsansfont{Space Grotesk}[Ligatures=TeX]');
+    lines.push('\\usepackage{sectsty}');
+    lines.push('\\allsectionsfont{\\sffamily\\mdseries}');
+
+    // Body line-height (clamped to LaTeX-reasonable range).
+    if (ed.typography && ed.typography.line_height_body) {
+      lines.push(`\\linespread{${ed.typography.line_height_body}}`);
+    }
+
+    // Drop cap — \lettrine{F}{irst paragraph} at the start of an opening graf.
+    // Color picked from editorial.link.hover (the magenta-dim accent).
+    lines.push('\\usepackage{lettrine}');
+    if (ed.link && ed.link.hover) {
+      lines.push('\\renewcommand{\\LettrineFontHook}{\\color{dropcap}\\sffamily}');
+    }
+
+    // Pull quote — italic, indented, vertical breathing room.
+    lines.push('\\usepackage{quoting}');
+    lines.push('\\quotingsetup{font=itshape,leftmargin=2em,rightmargin=2em,vskip=0.8em}');
+    lines.push('\\newenvironment{pullquote}{\\begin{quoting}}{\\end{quoting}}');
+
+    // Eyebrow — small uppercase label above a title or section head.
+    // Use as: \eyebrow{Field Notes · No. 014 · Build log}
+    lines.push('\\newcommand{\\eyebrow}[1]{{\\sffamily\\fontsize{10pt}{13pt}\\selectfont\\textcolor{edlink}{\\MakeUppercase{#1}}\\par\\vspace{0.4em}}}');
+
+    // Sidenote — margin annotation. Pandoc body markdown can reach this via
+    // raw LaTeX: `\sidenote{...}` or via custom Lua filter.
+    lines.push('\\newcommand{\\sidenote}[1]{\\marginpar{\\small\\sffamily\\textcolor{ink}{#1}}}');
+  }
+
   return lines.join('\n') + '\n';
 }
 
