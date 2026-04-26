@@ -51,7 +51,10 @@ function buildLatexPreamble(tokens) {
   lines.push(`\\renewcommand{\\baselinestretch}{${tokens.typography.line_height}}`);
   lines.push('');
   lines.push('% Colors');
-  lines.push('\\usepackage[table,RGB]{xcolor}');
+  // xcolor is loaded by Pandoc's default LaTeX template; pass our options via
+  // PassOptionsToPackage to avoid an option clash when Pandoc loads it without
+  // options before tokens.tex is injected via --include-in-header.
+  lines.push('\\PassOptionsToPackage{table,RGB}{xcolor}');
   lines.push(`\\definecolor{textcolor}{RGB}{${hexToRgb(tokens.colors.text)}}`);
   lines.push(`\\definecolor{accentcolor}{RGB}{${hexToRgb(tokens.colors.accent)}}`);
   lines.push(`\\definecolor{linkcolor}{RGB}{${hexToRgb(tokens.colors.link)}}`);
