@@ -12,6 +12,7 @@ Build, render, validation, and utility scripts. Invoked via `npm run <name>` (se
 | `compile-tokens.js` | `npm run compile:tokens` | `tokens.yaml` → `tokens.tex`, `tokens.css`, `tokens.json` |
 | `validate-schemas.js` | `npm run validate` | JSON Schema validation across the repo |
 | `check-citations.js` | `npm run check:citations` | Verify every `[@key]` in body markdown exists in `references.bib` |
+| `cite-add.js` | `npm run cite:add -- path/to/entry.bib` | Append one BibTeX entry to `references.bib`; rejects malformed input, multi-entry input, and duplicate keys |
 | `export-portable.js` | `npm run export:portable` | Markdown-only zip archive — escape hatch from the toolchain |
 
 ## Shared library

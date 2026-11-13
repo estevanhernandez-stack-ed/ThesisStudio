@@ -19,6 +19,7 @@
     "compile:tokens": "node scripts/compile-tokens.js",
     "validate": "node scripts/validate-schemas.js",
     "check:citations": "node scripts/check-citations.js",
+    "cite:add": "node scripts/cite-add.js",
     "check:links": "linkinator . --skip 'node_modules|08_OUTPUT|.git'",
     "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#08_OUTPUT\"",
     "export:portable": "node scripts/export-portable.js",
