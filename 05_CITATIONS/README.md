@@ -25,7 +25,7 @@ The render pipeline (`--citeproc`) resolves these against `references.bib` using
 
 `npm run check:citations` walks `03_BODY/*.md`, extracts every citation key, and checks each exists in `references.bib`. Missing keys fail with file + line number.
 
-The pre-commit hook runs this on staged body files.
+The pre-push hook runs this across all of `03_BODY/` before every push.
 
 ## Adding a new citation style
 

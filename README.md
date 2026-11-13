@@ -44,7 +44,8 @@ See `docs/getting-started.md` for the full guided walkthrough.
 | `npm run render:pdf` | `08_OUTPUT/pdf/thesis.pdf` (citation-styled, design-system applied) |
 | `npm run render:latex` | `08_OUTPUT/latex/thesis.tex` (advisor / journal submission) |
 | `npm run render:markdown` | `08_OUTPUT/markdown/thesis.md` (working-draft archive) |
-| `npm run render:all` | All three |
+| `npm run render:html` | `08_OUTPUT/html/thesis.html` (`article.html` in article mode; editorial web layout) |
+| `npm run render:all` | All four |
 | `npm run export:portable` | Plain-markdown zip archive — escape hatch from the toolchain |
 
 Every render writes a `*.manifest.json` next to the output: timestamp, git commit, design-system version, source hashes, tool versions. Reviewers can verify exact reproducibility.
@@ -55,7 +56,7 @@ Every render writes a `*.manifest.json` next to the output: timestamp, git commi
 
 ## Research-Phase Agent Swarms
 
-ThesisStudio ships with reusable swarm playbooks in `04_AGENT_SWARMS/` — lit-review swarm (5 parallel agents), counter-position swarm, primary-source swarm. Fill in `swarm-plan.md` for your topic and dispatch via Claude Code's Task tool. Convergence pattern documented in each playbook.
+ThesisStudio ships with reusable swarm playbooks in `04_AGENT_SWARMS/` — lit-review swarm (5 parallel agents), counter-position swarm, primary-source swarm. Copy `04_AGENT_SWARMS/swarm-plan.template.md`, fill it in for your topic, and dispatch via Claude Code's Task tool. Convergence pattern documented in each playbook.
 
 ## Privacy
 
