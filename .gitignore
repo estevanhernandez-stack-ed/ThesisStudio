@@ -48,3 +48,6 @@ dist/
 
 # Devcontainer build cache (if using Docker locally)
 .devcontainer/build/
+
+# Pre-research scratch output, moved by hand into 02_RESEARCH/ when used
+incoming/
