@@ -21,7 +21,7 @@
     "check:citations": "node scripts/check-citations.js",
     "cite:add": "node scripts/cite-add.js",
     "check:links": "linkinator . --skip 'node_modules|08_OUTPUT|.git'",
-    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#08_OUTPUT\"",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\" \"#08_OUTPUT\" \"#incoming\"",
     "export:portable": "node scripts/export-portable.js",
     "prepare": "husky"
   },
